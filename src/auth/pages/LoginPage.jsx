@@ -1,71 +1,86 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Swal from "sweetalert2";
+import { AuthContext } from "../context/AuthContext";
 
-const initialLoginForm = {
+const initialForms = {
     username: '',
-    password: '',
+    password: ''
 }
-export const LoginPage = ({ handlerLogin }) => {
 
-    const [loginForm, setLoginForm] = useState(initialLoginForm);
+export const LoginPage = () => {
+     const {handlerLogin} = useContext(AuthContext); 
+
+    const [loginForm, setLoginForm] = useState(initialForms);
     const { username, password } = loginForm;
 
-    const onInputChange = ({ target }) => {
+    const onInputChage = ({ target }) => {
         const { name, value } = target;
         setLoginForm({
             ...loginForm,
-            [ name ]: value,
+            [name]: value
         })
     }
-
     const onSubmit = (event) => {
         event.preventDefault();
         if (!username || !password) {
-            Swal.fire('Error de validacion', 'Username y password requeridos', 'error');
+            Swal.fire('Error de validacion', ' Usuario y contraseña requeridos');
         }
+        handlerLogin({ username, password });
 
-        // aca implementamos el login
-        handlerLogin({username, password});
-        
-        setLoginForm(initialLoginForm);
+        setLoginForm(initialForms);
     }
+
     return (
-        <div className="modal" style={ {display: 'block'} } tabIndex="-1">
+        <div className="modal" style={{ display: "block" }} tabIndex="-1">
             <div className="modal-dialog">
                 <div className="modal-content">
                     <div className="modal-header">
                         <h5 className="modal-title">Login Page</h5>
+
                     </div>
-                    <form onSubmit={ onSubmit }>
+                    <form action="" onSubmit={onSubmit}>
+
+
                         <div className="modal-body">
-                            <input
+                            <input type="text"
                                 className="form-control my-3 w-75"
                                 placeholder="Username"
                                 name="username"
                                 value={username}
-                                onChange={ onInputChange }
+                                onChange={onInputChage}
+                                id="username"
                             />
-                            
-                            <input
+                            <input type="password"
                                 className="form-control my-3 w-75"
                                 placeholder="Password"
-                                type="password"
                                 name="password"
                                 value={password}
-                                onChange={onInputChange}
+                                onChange={onInputChage}
+                                id="password"
                             />
+
                         </div>
                         <div className="modal-footer">
+
                             <button
+                                type="submit"
                                 className="btn btn-primary"
-                                type="submit">
-                                Login
-                            </button>
+                            >Save changes</button>
+
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
+
+
+
                     </form>
+                    <label>Usuario: asdf</label>
+                    <label>Constraseña: asdf</label>
+
+
                 </div>
             </div>
-        </div>
-    );
 
+        </div>
+
+    );
 }

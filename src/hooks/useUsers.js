@@ -1,89 +1,79 @@
 import { useReducer, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
 import { usersReducer } from "../reducers/usersReducer";
-
-const initialUsers = [
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+//retorna un objeto
+const initialUser = [
     {
         id: 1,
         username: 'pepe',
-        password: '12345',
+        password: '1234',
         email: 'pepe@correo.com'
-    },
-];
-
-const initialUserForm = {
+    }
+]
+const initialUserForm =
+{
     id: 0,
     username: '',
     password: '',
     email: '',
 }
-
 export const useUsers = () => {
-    const [users, dispatch] = useReducer(usersReducer, initialUsers);
+    const [users, dispatch] = useReducer(usersReducer, initialUser);
     const [userSelected, setUserSelected] = useState(initialUserForm);
     const [visibleForm, setVisibleForm] = useState(false);
-    const navigate = useNavigate();
-
+    const navigate= useNavigate();
     const handlerAddUser = (user) => {
-        // console.log(user);
-        dispatch({
-            type: (user.id === 0) ? 'addUser' : 'updateUser',
-            payload: user,
-        });
 
+        dispatch({
+            type: (user.id === 0) ? 'addUser': 'updateUser',
+            payload: user
+        });
         Swal.fire(
             (user.id === 0) ?
-                'Usuario Creado' :
+                'Usuiro creado' :
                 'Usuario Actualizado',
             (user.id === 0) ?
                 'El usuario ha sido creado con exito!' :
-                'El usuario ha sido actualizado con exito!',
+                'El usurio ha sido actualizado con exito!',
             'success'
         );
         handlerCloseForm();
         navigate('/users');
     }
-
     const handlerRemoveUser = (id) => {
-        // console.log(id);
 
         Swal.fire({
-            title: 'Esta seguro que desea eliminar?',
+            title: "Está seguro que desea eliminar?",
             text: "Cuidado el usuario sera eliminado!",
-            icon: 'warning',
+            icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Si, eliminar!'
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Si, eliminar!"
         }).then((result) => {
             if (result.isConfirmed) {
-
                 dispatch({
                     type: 'removeUser',
-                    payload: id,
+                    payload: id
                 });
-                Swal.fire(
-                    'Usuario Eliminado!',
-                    'El usuario ha sido eliminado con exito!',
-                    'success'
-                )
+                Swal.fire({
+                    title: "Usuario Eliminado!",
+                    text: "El usuario ha sido eliminado con exito.",
+                    icon: "success"
+                });
             }
-        })
-
+        });
     }
-
     const handlerUserSelectedForm = (user) => {
-        // console.log(user)
+        //Para que quede lo mas inmutablemente posbible
         setVisibleForm(true);
         setUserSelected({ ...user });
     }
-
-    const handlerOpenForm = () => {
-        setVisibleForm(true);
+    const handlerOpenForm = () =>{
+        setVisibleForm(true)
     }
-
-    const handlerCloseForm = () => {
+    const handlerCloseForm = () =>{
         setVisibleForm(false);
         setUserSelected(initialUserForm);
     }
@@ -92,10 +82,11 @@ export const useUsers = () => {
         userSelected,
         initialUserForm,
         visibleForm,
+
         handlerAddUser,
         handlerRemoveUser,
         handlerUserSelectedForm,
         handlerOpenForm,
-        handlerCloseForm,
+        handlerCloseForm
     }
 }
